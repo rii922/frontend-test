@@ -1,8 +1,8 @@
 import * as React from 'react';
 import './App.css';
 import { CssBaseline, Container } from '@mui/material';
-import Header from './Header';
-import SearchBar from './SearchBar';
+import Header from './components/Header';
+import SearchBar from './components/SearchBar';
 
 export const APIKeyContext = React.createContext<[string, React.Dispatch<React.SetStateAction<string>>] | null>(null);
 

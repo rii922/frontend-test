@@ -10,7 +10,7 @@ import {
   Button,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { APIKeyContext } from './App';
+import { APIKeyContext } from '../App';
 
 interface Props {
   open: boolean;
