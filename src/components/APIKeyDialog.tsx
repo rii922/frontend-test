@@ -31,7 +31,7 @@ const APIKeyDialog: React.FC<Props> = (props) => {
     setShowAPIKey(false);
   };
   const handleClose = () => {
-    const newAPIKey = (document.getElementById('apikey') as HTMLInputElement).value;
+    const newAPIKey = (document.getElementById('apikey-input') as HTMLInputElement).value;
     setAPIKey(newAPIKey);
     props.handleClose();
   };
@@ -49,8 +49,8 @@ const APIKeyDialog: React.FC<Props> = (props) => {
       <DialogContent>
         <TextField
           type={showAPIKey ? 'text' : 'password'}
-          id="apikey"
-          name="apikey"
+          id="apikey-input"
+          name="apikey-input"
           defaultValue={APIKey}
           autoFocus
           fullWidth
