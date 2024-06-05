@@ -24,9 +24,19 @@ const APIKeyDialog: React.FC<Props> = (props) => {
   const handleMouseDownShowAPIKey = (event: React.MouseEvent) => {
     event.preventDefault();
   };
+  const hideAPIKey = () => {
+    setShowAPIKey(false);
+  };
 
   return (
-    <Dialog open={props.open} onClose={props.handleClose} maxWidth="xs" fullWidth disableRestoreFocus>
+    <Dialog
+      open={props.open}
+      onClose={props.handleClose}
+      maxWidth="xs"
+      fullWidth
+      disableRestoreFocus
+      TransitionProps={{ onExited: hideAPIKey }}
+    >
       <DialogTitle>Qiita APIキーを設定</DialogTitle>
       <DialogContent>
         <TextField
