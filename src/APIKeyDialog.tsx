@@ -10,6 +10,7 @@ import {
   Button,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { APIKeyContext } from './App';
 
 interface Props {
   open: boolean;
@@ -18,24 +19,30 @@ interface Props {
 
 const APIKeyDialog: React.FC<Props> = (props) => {
   const [showAPIKey, setShowAPIKey] = React.useState(false);
+  const [APIKey, setAPIKey] = React.useContext(APIKeyContext)!;
   const handleClickShowAPIKey = () => {
     setShowAPIKey((show) => !show);
   };
   const handleMouseDownShowAPIKey = (event: React.MouseEvent) => {
     event.preventDefault();
   };
-  const hideAPIKey = () => {
+  const handleExited = () => {
     setShowAPIKey(false);
+  };
+  const handleClose = () => {
+    const newAPIKey = (document.getElementById('apikey') as HTMLInputElement).value;
+    setAPIKey(newAPIKey);
+    props.handleClose();
   };
 
   return (
     <Dialog
       open={props.open}
-      onClose={props.handleClose}
+      onClose={handleClose}
       maxWidth="xs"
       fullWidth
       disableRestoreFocus
-      TransitionProps={{ onExited: hideAPIKey }}
+      TransitionProps={{ onExited: handleExited }}
     >
       <DialogTitle>Qiita APIキーを設定</DialogTitle>
       <DialogContent>
@@ -43,6 +50,7 @@ const APIKeyDialog: React.FC<Props> = (props) => {
           type={showAPIKey ? 'text' : 'password'}
           id="apikey"
           name="apikey"
+          defaultValue={APIKey}
           autoFocus
           fullWidth
           variant="filled"
@@ -59,7 +67,7 @@ const APIKeyDialog: React.FC<Props> = (props) => {
           }}
         />
         <DialogActions>
-          <Button onClick={props.handleClose}>閉じる</Button>
+          <Button onClick={handleClose}>閉じる</Button>
         </DialogActions>
       </DialogContent>
     </Dialog>
