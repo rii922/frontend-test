@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Recoil from 'recoil';
 import {
   Dialog,
   DialogTitle,
@@ -10,7 +11,7 @@ import {
   Button,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { APIKeyContext } from '../App';
+import { APIKeyState } from '../states/APIKeyState';
 
 interface Props {
   open: boolean;
@@ -19,7 +20,7 @@ interface Props {
 
 const APIKeyDialog: React.FC<Props> = (props) => {
   const [showAPIKey, setShowAPIKey] = React.useState(false);
-  const [APIKey, setAPIKey] = React.useContext(APIKeyContext)!;
+  const [APIKey, setAPIKey] = Recoil.useRecoilState(APIKeyState);
   const handleClickShowAPIKey = () => {
     setShowAPIKey((show) => !show);
   };
