@@ -10,6 +10,7 @@ import { queryState } from '../states/QueryState';
 const SearchBar: React.FC = () => {
   const [query, setQuery] = Recoil.useRecoilState(queryState);
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const searchInputElement = React.useRef<HTMLInputElement>(null);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
       handleSearch();
@@ -17,7 +18,7 @@ const SearchBar: React.FC = () => {
     }
   };
   const handleSearch = () => {
-    const newQuery = (document.getElementById('search-input') as HTMLInputElement).value;
+    const newQuery = searchInputElement.current!.value;
     setQuery(newQuery);
   };
   const handleDialogOpen = () => {
@@ -36,7 +37,7 @@ const SearchBar: React.FC = () => {
     }
     axios
       .get('https://qiita.com/api/v2/items', {
-        headers: { Authorization: APIKey && `Bearer ${APIKey}` },
+        headers: { Authorization: `Bearer ${APIKey}` },
         params: { query: query },
       })
       .then((response) => {
@@ -54,6 +55,7 @@ const SearchBar: React.FC = () => {
           id="search-input"
           name="search-input"
           defaultValue={query}
+          inputRef={searchInputElement}
           placeholder="Search..."
           sx={{ flex: 1, my: 1 }}
           onKeyDown={handleKeyDown}
