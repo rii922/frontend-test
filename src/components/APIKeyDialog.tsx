@@ -21,7 +21,11 @@ interface Props {
 const APIKeyDialog: React.FC<Props> = (props) => {
   const [showAPIKey, setShowAPIKey] = React.useState(false);
   const [APIKey, setAPIKey] = Recoil.useRecoilState(APIKeyState);
+  const [inputError, setInputError] = React.useState(false);
   const APIKeyInputElement = React.useRef<HTMLInputElement>(null);
+  const handleChange = () => {
+    setInputError(!APIKeyInputElement.current!.validity.valid);
+  };
   const handleClickShowAPIKey = () => {
     setShowAPIKey((show) => !show);
   };
@@ -54,10 +58,14 @@ const APIKeyDialog: React.FC<Props> = (props) => {
           name="apikey-input"
           defaultValue={APIKey}
           inputRef={APIKeyInputElement}
+          required
+          error={inputError}
           autoFocus
           fullWidth
           variant="filled"
           label="APIキー"
+          helperText={APIKeyInputElement?.current?.validationMessage || ' '}
+          onChange={handleChange}
           sx={{ my: 2 }}
           InputProps={{
             endAdornment: (
