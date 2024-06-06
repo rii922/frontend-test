@@ -1,9 +1,10 @@
 import * as React from 'react';
 import * as Recoil from 'recoil';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { Paper, InputBase, Tooltip, IconButton, Divider } from '@mui/material';
 import { SearchOutlined, KeyOutlined } from '@mui/icons-material';
 import APIKeyDialog from './APIKeyDialog';
+import ErrorMessage from './ErrorMessage';
 import { APIKeyState } from '../states/APIKeyState';
 import { queryState } from '../states/QueryState';
 
@@ -11,6 +12,8 @@ const SearchBar: React.FC = () => {
   const [query, setQuery] = Recoil.useRecoilState(queryState);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const searchInputElement = React.useRef<HTMLInputElement>(null);
+  const APIKey = Recoil.useRecoilValue(APIKeyState);
+  const [invalidAPIKey, setInvalidAPIKey] = React.useState(false);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
       handleSearch();
@@ -30,7 +33,6 @@ const SearchBar: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
-  const APIKey = Recoil.useRecoilValue(APIKeyState);
   React.useEffect(() => {
     if (APIKey === '') {
       return;
@@ -43,7 +45,10 @@ const SearchBar: React.FC = () => {
       .then((response) => {
         console.log(response.data);
       })
-      .catch((error) => {
+      .catch((error: AxiosError) => {
+        if (error.response?.status === 401) {
+          setInvalidAPIKey(true);
+        }
         console.log(error);
       });
   }, [query]);
@@ -73,6 +78,8 @@ const SearchBar: React.FC = () => {
         </Tooltip>
       </Paper>
       <APIKeyDialog open={dialogOpen} handleClose={handleDialogClose} />
+      {APIKey === '' && <ErrorMessage content="APIキーを入力してください" />}
+      {invalidAPIKey && <ErrorMessage content="APIキーが正しくありません" />}
     </>
   );
 };
