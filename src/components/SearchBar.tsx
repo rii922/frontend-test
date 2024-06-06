@@ -7,6 +7,7 @@ import APIKeyDialog from './APIKeyDialog';
 import ErrorMessage from './ErrorMessage';
 import { APIKeyState } from '../states/APIKeyState';
 import { queryState } from '../states/QueryState';
+import { dataState } from '../states/DataState';
 
 const SearchBar: React.FC = () => {
   const [query, setQuery] = Recoil.useRecoilState(queryState);
@@ -14,6 +15,7 @@ const SearchBar: React.FC = () => {
   const searchInputElement = React.useRef<HTMLInputElement>(null);
   const APIKey = Recoil.useRecoilValue(APIKeyState);
   const [invalidAPIKey, setInvalidAPIKey] = React.useState(false);
+  const [, setData] = Recoil.useRecoilState(dataState);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
       handleSearch();
@@ -43,13 +45,13 @@ const SearchBar: React.FC = () => {
         params: { query: query },
       })
       .then((response) => {
-        console.log(response.data);
+        setInvalidAPIKey(false);
+        setData(response.data);
       })
       .catch((error: AxiosError) => {
         if (error.response?.status === 401) {
           setInvalidAPIKey(true);
         }
-        console.log(error);
       });
   }, [query]);
 
