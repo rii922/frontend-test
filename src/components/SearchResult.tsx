@@ -18,6 +18,11 @@ interface SearchResultProps {
   sx?: SxProps<Theme>;
 }
 
+const formatDate = (date: string) => {
+  const match = date.match(/^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)\+(\d+):(\d+)$/);
+  return `${match![1]}年${match![2]}月${match![3]}日`;
+};
+
 const SearchResult: React.FC<SearchResultProps> = (props) => {
   const data = Recoil.useRecoilValue(dataState);
 
@@ -46,7 +51,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                       return <Chip key={tag.name} label={tag.name} sx={{ m: 0.5 }} />;
                     })}
                   </TableCell>
-                  <TableCell>{article.updated_at}</TableCell>
+                  <TableCell>{formatDate(article.updated_at)}</TableCell>
                 </TableRow>
               );
             })}
