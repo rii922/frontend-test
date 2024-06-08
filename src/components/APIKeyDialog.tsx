@@ -13,12 +13,12 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { APIKeyState } from '../states/APIKeyState';
 
-interface Props {
+interface APIKeyDialogProps {
   open: boolean;
   handleClose: () => void;
 }
 
-const APIKeyDialog: React.FC<Props> = (props) => {
+const APIKeyDialog: React.FC<APIKeyDialogProps> = (props) => {
   const [showAPIKey, setShowAPIKey] = React.useState(false);
   const [APIKey, setAPIKey] = Recoil.useRecoilState(APIKeyState);
   const [inputError, setInputError] = React.useState(false);

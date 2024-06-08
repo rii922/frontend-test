@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Box, Paper } from '@mui/material';
 import { ErrorOutline } from '@mui/icons-material';
 
-interface Props {
+interface ErrorMessageProps {
   content: string;
 }
 
-const ErrorMessage: React.FC<Props> = (props) => {
+const ErrorMessage: React.FC<ErrorMessageProps> = (props) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
       <Paper

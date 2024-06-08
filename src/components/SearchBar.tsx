@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Recoil from 'recoil';
 import axios, { AxiosError } from 'axios';
-import { Paper, InputBase, Tooltip, IconButton, Divider } from '@mui/material';
+import { SxProps, Theme, Paper, InputBase, Tooltip, IconButton, Divider } from '@mui/material';
 import { SearchOutlined, KeyOutlined } from '@mui/icons-material';
 import APIKeyDialog from './APIKeyDialog';
 import ErrorMessage from './ErrorMessage';
@@ -9,7 +9,11 @@ import { APIKeyState } from '../states/APIKeyState';
 import { queryState } from '../states/QueryState';
 import { dataState } from '../states/DataState';
 
-const SearchBar: React.FC = () => {
+interface SearchBarProps {
+  sx?: SxProps<Theme>;
+}
+
+const SearchBar: React.FC<SearchBarProps> = (props) => {
   const [query, setQuery] = Recoil.useRecoilState(queryState);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const searchInputElement = React.useRef<HTMLInputElement>(null);
@@ -56,14 +60,22 @@ const SearchBar: React.FC = () => {
 
   return (
     <>
-      <Paper component="form" sx={{ display: 'flex', alignItems: 'center', pl: 2, pr: 1 }} onSubmit={handleSubmit}>
+      <Paper
+        component="form"
+        elevation={4}
+        sx={[
+          { display: 'flex', alignItems: 'center', pl: 2, pr: 1 },
+          ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        ]}
+        onSubmit={handleSubmit}
+      >
         <InputBase
           id="search-input"
           name="search-input"
           defaultValue={query}
           inputRef={searchInputElement}
           placeholder="Search..."
-          sx={{ flex: 1, my: 1 }}
+          sx={{ flex: 1, py: 1 }}
           onKeyDown={handleKeyDown}
         />
         <Tooltip title="検索">

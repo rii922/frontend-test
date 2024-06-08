@@ -10,11 +10,11 @@ function App() {
   return (
     <Recoil.RecoilRoot>
       <CssBaseline />
-      <Header title="Qiita 記事検索" />
-      <Container maxWidth="lg">
-        <SearchBar />
-        <SearchResult />
-      </Container>
+      <div style={{ display: 'flex', flexDirection: 'column', width: '100vw', height: '100vh' }}>
+        <Header title="Qiita 記事検索" sx={{ mb: 3 }} />
+        <SearchBar sx={{ mx: 3, mb: 3 }} />
+        <SearchResult sx={{ mx: 3, mb: 3 }} />
+      </div>
     </Recoil.RecoilRoot>
   );
 }

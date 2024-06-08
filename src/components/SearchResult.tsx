@@ -1,16 +1,35 @@
 import * as React from 'react';
 import * as Recoil from 'recoil';
-import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Chip } from '@mui/material';
+import {
+  SxProps,
+  Theme,
+  Paper,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Chip,
+} from '@mui/material';
 import { dataState } from '../states/DataState';
 
-const SearchResult: React.FC = () => {
+interface SearchResultProps {
+  sx?: SxProps<Theme>;
+}
+
+const SearchResult: React.FC<SearchResultProps> = (props) => {
   const data = Recoil.useRecoilValue(dataState);
 
   return (
     data && (
-      <TableContainer component={Paper} sx={{ my: 2 }}>
-        <Table>
-          <TableHead>
+      <TableContainer
+        component={Paper}
+        elevation={4}
+        sx={[{ width: 'auto' }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
+      >
+        <Table stickyHeader sx={{ maxWidth: '100%' }}>
+          <TableHead sx={{ '& tr th': { fontWeight: 'bold' } }}>
             <TableRow>
               <TableCell>タイトル</TableCell>
               <TableCell>タグ</TableCell>
@@ -20,11 +39,11 @@ const SearchResult: React.FC = () => {
           <TableBody>
             {data?.map((article) => {
               return (
-                <TableRow>
+                <TableRow key={article.id}>
                   <TableCell>{article.title}</TableCell>
                   <TableCell>
                     {article.tags.map((tag) => {
-                      return <Chip label={tag.name} sx={{ m: 0.5 }} />;
+                      return <Chip key={tag.name} label={tag.name} sx={{ m: 0.5 }} />;
                     })}
                   </TableCell>
                   <TableCell>{article.updated_at}</TableCell>

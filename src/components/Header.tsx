@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { AppBar, Toolbar, Typography } from '@mui/material';
+import { SxProps, Theme, AppBar, Toolbar, Typography } from '@mui/material';
 
-interface Props {
+interface HeaderProps {
   title: string;
+  sx?: SxProps<Theme>;
 }
 
-const Header: React.FC<Props> = (props) => {
+const Header: React.FC<HeaderProps> = (props) => {
   return (
-    <AppBar position="static" sx={{ mb: 3 }}>
+    <AppBar position="static" sx={props.sx}>
       <Toolbar>
         <Typography variant="h4" component="h1">
           {props.title}
