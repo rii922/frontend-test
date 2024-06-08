@@ -1,4 +1,3 @@
-import * as React from 'react';
 import * as Recoil from 'recoil';
 import './App.css';
 import { CssBaseline, Container } from '@mui/material';
@@ -12,8 +11,8 @@ function App() {
       <CssBaseline />
       <div style={{ display: 'flex', flexDirection: 'column', width: '100vw', height: '100vh' }}>
         <Header title="Qiita 記事検索" sx={{ mb: 3 }} />
-        <SearchBar sx={{ mx: 3, mb: 3 }} />
-        <SearchResult sx={{ mx: 3, mb: 3 }} />
+        <SearchBar sx={{ mx: 3 }} />
+        <SearchResult sx={{ p: 3, flex: 1 }} />
       </div>
     </Recoil.RecoilRoot>
   );

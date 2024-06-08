@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Recoil from 'recoil';
 import {
+  Box,
   SxProps,
   Theme,
   Paper,
@@ -11,6 +12,7 @@ import {
   TableRow,
   TableCell,
   Chip,
+  Pagination,
 } from '@mui/material';
 import { dataState } from '../states/DataState';
 
@@ -28,38 +30,42 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
 
   return (
     data && (
-      <TableContainer
-        component={Paper}
-        elevation={4}
-        sx={[{ width: 'auto' }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
+      <Box
+        sx={[
+          { display: 'flex', flexDirection: 'column', overflow: 'auto' },
+          ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        ]}
       >
-        <Table stickyHeader>
-          <TableHead sx={{ '& tr th': { fontWeight: 'bold' } }}>
-            <TableRow>
-              <TableCell sx={{ minWidth: 400 }}>タイトル</TableCell>
-              <TableCell sx={{ minWidth: 400 }}>タグ</TableCell>
-              <TableCell sx={{ minWidth: 150 }}>最終更新日</TableCell>
-              <TableCell sx={{ minWidth: 150 }}>投稿日</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data?.map((article) => {
-              return (
-                <TableRow key={article.id}>
-                  <TableCell>{article.title}</TableCell>
-                  <TableCell>
-                    {article.tags.map((tag) => {
-                      return <Chip key={tag.name} label={tag.name} sx={{ m: 0.5 }} />;
-                    })}
-                  </TableCell>
-                  <TableCell>{formatDate(article.updated_at)}</TableCell>
-                  <TableCell>{formatDate(article.created_at)}</TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        <TableContainer component={Paper} elevation={4} sx={{ width: 'auto', mb: 3 }}>
+          <Table stickyHeader>
+            <TableHead sx={{ '& tr th': { fontWeight: 'bold' } }}>
+              <TableRow>
+                <TableCell sx={{ minWidth: 400 }}>タイトル</TableCell>
+                <TableCell sx={{ minWidth: 400 }}>タグ</TableCell>
+                <TableCell sx={{ minWidth: 150 }}>最終更新日</TableCell>
+                <TableCell sx={{ minWidth: 150 }}>投稿日</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data?.map((article) => {
+                return (
+                  <TableRow key={article.id}>
+                    <TableCell>{article.title}</TableCell>
+                    <TableCell>
+                      {article.tags.map((tag) => {
+                        return <Chip key={tag.name} label={tag.name} sx={{ m: 0.5 }} />;
+                      })}
+                    </TableCell>
+                    <TableCell>{formatDate(article.updated_at)}</TableCell>
+                    <TableCell>{formatDate(article.created_at)}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Pagination color="primary" count={0} sx={{ '& .MuiPagination-ul': { justifyContent: 'center' } }} />
+      </Box>
     )
   );
 };
