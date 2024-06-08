@@ -18,31 +18,20 @@ const SearchBar: React.FC = () => {
   const [, setData] = Recoil.useRecoilState(dataState);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
-      handleSearch();
       event.currentTarget.blur();
+      handleSearch();
     }
   };
   const handleSearch = () => {
     const newQuery = searchInputElement.current!.value;
     setQuery(newQuery);
-  };
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
-  };
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-  };
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
-  React.useEffect(() => {
-    if (APIKey === '') {
+    if (APIKey === '' || invalidAPIKey) {
       return;
     }
     axios
       .get('https://qiita.com/api/v2/items', {
         headers: { Authorization: `Bearer ${APIKey}` },
-        params: { query: query },
+        params: { query: newQuery },
       })
       .then((response) => {
         setInvalidAPIKey(false);
@@ -53,7 +42,17 @@ const SearchBar: React.FC = () => {
           setInvalidAPIKey(true);
         }
       });
-  }, [query]);
+  };
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+  const handleDialogClose = () => {
+    setInvalidAPIKey(false);
+    setDialogOpen(false);
+  };
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  };
 
   return (
     <>
