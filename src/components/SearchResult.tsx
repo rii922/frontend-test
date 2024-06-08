@@ -39,6 +39,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
               <TableCell>タイトル</TableCell>
               <TableCell>タグ</TableCell>
               <TableCell>最終更新日</TableCell>
+              <TableCell>投稿日</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -52,6 +53,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     })}
                   </TableCell>
                   <TableCell>{formatDate(article.updated_at)}</TableCell>
+                  <TableCell>{formatDate(article.created_at)}</TableCell>
                 </TableRow>
               );
             })}
