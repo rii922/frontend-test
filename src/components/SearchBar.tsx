@@ -8,6 +8,7 @@ import ErrorMessage from './ErrorMessage';
 import { APIKeyState } from '../states/APIKeyState';
 import { queryState } from '../states/QueryState';
 import { dataState } from '../states/DataState';
+import { loadingState } from '../states/LoadingState';
 
 interface SearchBarProps {
   sx?: SxProps<Theme>;
@@ -20,6 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   const APIKey = Recoil.useRecoilValue(APIKeyState);
   const [invalidAPIKey, setInvalidAPIKey] = React.useState(false);
   const [, setData] = Recoil.useRecoilState(dataState);
+  const [, setLoading] = Recoil.useRecoilState(loadingState);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
       event.currentTarget.blur();
@@ -32,6 +34,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
     if (APIKey === '' || invalidAPIKey) {
       return;
     }
+    setLoading(true);
     axios
       .get('https://qiita.com/api/v2/items', {
         headers: { Authorization: `Bearer ${APIKey}` },
@@ -45,6 +48,9 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
         if (error.response?.status === 401) {
           setInvalidAPIKey(true);
         }
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
   const handleDialogOpen = () => {
