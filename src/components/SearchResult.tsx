@@ -20,7 +20,7 @@ interface SearchResultProps {
 
 const formatDate = (date: string) => {
   const match = date.match(/^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)\+(\d+):(\d+)$/);
-  return `${match![1]}年${match![2]}月${match![3]}日`;
+  return match === null ? date : `${match[1]}年${match[2]}月${match[3]}日`;
 };
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
@@ -33,13 +33,13 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         elevation={4}
         sx={[{ width: 'auto' }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
       >
-        <Table stickyHeader sx={{ maxWidth: '100%' }}>
+        <Table stickyHeader>
           <TableHead sx={{ '& tr th': { fontWeight: 'bold' } }}>
             <TableRow>
-              <TableCell>タイトル</TableCell>
-              <TableCell>タグ</TableCell>
-              <TableCell>最終更新日</TableCell>
-              <TableCell>投稿日</TableCell>
+              <TableCell sx={{ minWidth: 400 }}>タイトル</TableCell>
+              <TableCell sx={{ minWidth: 400 }}>タグ</TableCell>
+              <TableCell sx={{ minWidth: 150 }}>最終更新日</TableCell>
+              <TableCell sx={{ minWidth: 150 }}>投稿日</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
