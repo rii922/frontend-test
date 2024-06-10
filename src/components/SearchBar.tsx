@@ -7,7 +7,8 @@ import APIKeyDialog from './APIKeyDialog';
 import ErrorMessage from './ErrorMessage';
 import { APIKeyState } from '../states/APIKeyState';
 import { queryState } from '../states/QueryState';
-import { dataState } from '../states/DataState';
+import { pageState } from '../states/PageState';
+import { responseState } from '../states/ResponseState';
 import { loadingState } from '../states/LoadingState';
 
 interface SearchBarProps {
@@ -16,11 +17,12 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = (props) => {
   const [query, setQuery] = Recoil.useRecoilState(queryState);
+  const page = Recoil.useRecoilValue(pageState);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const searchInputElement = React.useRef<HTMLInputElement>(null);
   const APIKey = Recoil.useRecoilValue(APIKeyState);
   const [invalidAPIKey, setInvalidAPIKey] = React.useState(false);
-  const [, setData] = Recoil.useRecoilState(dataState);
+  const [, setResponse] = Recoil.useRecoilState(responseState);
   const [, setLoading] = Recoil.useRecoilState(loadingState);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
@@ -31,20 +33,23 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   const handleSearch = () => {
     const newQuery = searchInputElement.current!.value;
     setQuery(newQuery);
-    if (APIKey === '' || invalidAPIKey) {
+  };
+  const search = () => {
+    if (APIKey === '' || invalidAPIKey || query === '') {
       return;
     }
     setLoading(true);
     axios
       .get('https://qiita.com/api/v2/items', {
         headers: { Authorization: `Bearer ${APIKey}` },
-        params: { query: newQuery },
+        params: { query: query, page: page },
       })
       .then((response) => {
         setInvalidAPIKey(false);
-        setData(response.data);
+        setResponse(response);
       })
       .catch((error: AxiosError) => {
+        setResponse(null);
         if (error.response?.status === 401) {
           setInvalidAPIKey(true);
         }
@@ -63,6 +68,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
+  React.useEffect(search, [APIKey, query, page]);
 
   return (
     <>

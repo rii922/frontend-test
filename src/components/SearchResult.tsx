@@ -15,7 +15,8 @@ import {
   Pagination,
   CircularProgress,
 } from '@mui/material';
-import { dataState } from '../states/DataState';
+import { pageState } from '../states/PageState';
+import { dataSelector } from '../states/ResponseState';
 import { loadingState } from '../states/LoadingState';
 
 interface SearchResultProps {
@@ -28,7 +29,8 @@ const formatDate = (date: string) => {
 };
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
-  const data = Recoil.useRecoilValue(dataState);
+  const [, setPage] = Recoil.useRecoilState(pageState);
+  const data = Recoil.useRecoilValue(dataSelector);
   const loading = Recoil.useRecoilValue(loadingState);
 
   return (
@@ -71,7 +73,16 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
           />
         )}
       </TableContainer>
-      <Pagination color="primary" count={0} sx={{ '& .MuiPagination-ul': { justifyContent: 'center' } }} />
+      <Pagination
+        color="primary"
+        boundaryCount={0}
+        siblingCount={3}
+        count={100}
+        sx={{ '& .MuiPagination-ul': { justifyContent: 'center' } }}
+        onChange={(_, newPage) => {
+          setPage(newPage);
+        }}
+      />
     </Box>
   );
 };

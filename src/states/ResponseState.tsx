@@ -1,4 +1,5 @@
 import * as Recoil from 'recoil';
+import { AxiosResponse, AxiosResponseHeaders } from 'axios';
 
 interface QiitaResponseArticle {
   rendered_body: string;
@@ -21,38 +22,46 @@ interface QiitaResponseArticle {
   stocks_count: number;
   tags: Array<{
     name: string;
-    versions: Array<string>;
+    versions: string[];
   }>;
   title: string;
   updated_at: string;
   url: string;
   user: {
-    description: string;
-    facebook_id: string;
+    description: string | null;
+    facebook_id: string | null;
     followees_count: number;
     followers_count: number;
-    github_login_name: string;
+    github_login_name: string | null;
     id: string;
     items_count: number;
-    linkedin_id: string;
-    location: string;
-    name: string;
-    organization: string;
+    linkedin_id: string | null;
+    location: string | null;
+    name: string | null;
+    organization: string | null;
     permanent_id: number;
     profile_image_url: string;
     team_only: boolean;
-    twitter_screen_name: string;
-    website_url: string;
+    twitter_screen_name: string | null;
+    website_url: string | null;
   };
-  page_views_count: number;
+  page_views_count: number | null;
   team_membership: {
+    description: string;
+    email: string;
+    id: string;
+    last_accessed_at: string;
     name: string;
   };
-  organization_url_name: string;
+  organization_url_name: string | null;
   slide: boolean;
 }
 
-export const dataState = Recoil.atom<QiitaResponseArticle[] | null>({
-  key: 'data',
+export const responseState = Recoil.atom<AxiosResponse<QiitaResponseArticle[]> | null>({
+  key: 'response',
   default: null,
+});
+export const dataSelector = Recoil.selector<QiitaResponseArticle[] | null>({
+  key: 'data',
+  get: ({ get }) => get(responseState)?.data ?? null,
 });
