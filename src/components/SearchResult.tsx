@@ -77,7 +77,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         color="primary"
         boundaryCount={0}
         siblingCount={3}
-        count={100}
+        count={data === null ? 0 : 100}
         sx={{ '& .MuiPagination-ul': { justifyContent: 'center' } }}
         onChange={(_, newPage) => {
           setPage(newPage);
