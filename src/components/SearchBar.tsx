@@ -10,6 +10,7 @@ import { queryState } from '../states/QueryState';
 import { pageState } from '../states/PageState';
 import { responseState } from '../states/ResponseState';
 import { loadingState } from '../states/LoadingState';
+import { scrollSearchResultToTop } from './SearchResult';
 
 interface SearchBarProps {
   sx?: SxProps<Theme>;
@@ -56,6 +57,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
       })
       .finally(() => {
         setLoading(false);
+        scrollSearchResultToTop();
       });
   };
   const handleDialogOpen = () => {

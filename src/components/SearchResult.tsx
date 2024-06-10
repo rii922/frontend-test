@@ -28,6 +28,14 @@ const formatDate = (date: string) => {
   return match === null ? date : `${match[1]}年${match[2]}月${match[3]}日`;
 };
 
+export const scrollSearchResultToTop = () => {
+  const container = document.getElementById('search_result_table_container');
+  if (container) {
+    container.scrollTop = 0;
+    container.scrollLeft = 0;
+  }
+};
+
 const SearchResult: React.FC<SearchResultProps> = (props) => {
   const [, setPage] = Recoil.useRecoilState(pageState);
   const data = Recoil.useRecoilValue(dataSelector);
@@ -40,7 +48,12 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
       ]}
     >
-      <TableContainer component={Paper} elevation={4} sx={{ width: 'auto', mb: 3, flex: 1 }}>
+      <TableContainer
+        id="search_result_table_container"
+        component={Paper}
+        elevation={4}
+        sx={{ width: 'auto', mb: 3, flex: 1 }}
+      >
         <Table stickyHeader>
           <TableHead sx={{ '& tr th': { fontWeight: 'bold' } }}>
             <TableRow>
