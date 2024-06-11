@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as Recoil from 'recoil';
+import { Link } from 'react-router-dom';
 import {
   Box,
   SxProps,
@@ -12,9 +13,11 @@ import {
   TableRow,
   TableCell,
   Chip,
+  Button,
   Pagination,
   CircularProgress,
 } from '@mui/material';
+import { KeyboardArrowRight } from '@mui/icons-material';
 import { pageState } from '../states/PageState';
 import { dataSelector } from '../states/ResponseState';
 import { loadingState } from '../states/LoadingState';
@@ -61,13 +64,16 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
               <TableCell sx={{ minWidth: 400 }}>タグ</TableCell>
               <TableCell sx={{ minWidth: 150 }}>最終更新日</TableCell>
               <TableCell sx={{ minWidth: 150 }}>投稿日</TableCell>
+              <TableCell sx={{ width: 'auto' }}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data?.map((article) => {
               return (
                 <TableRow key={article.id}>
-                  <TableCell>{article.title}</TableCell>
+                  <TableCell sx={{ '& a': { color: 'primary.main' } }}>
+                    <Link to={`/${article.id}`}>{article.title}</Link>
+                  </TableCell>
                   <TableCell>
                     {article.tags.map((tag) => {
                       return <Chip key={tag.name} label={tag.name} sx={{ m: 0.5 }} />;
@@ -75,6 +81,18 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                   </TableCell>
                   <TableCell>{formatDate(article.updated_at)}</TableCell>
                   <TableCell>{formatDate(article.created_at)}</TableCell>
+                  <TableCell>
+                    <Link to={`/${article.id}`}>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        endIcon={<KeyboardArrowRight />}
+                        sx={{ whiteSpace: 'nowrap' }}
+                      >
+                        記事を読む
+                      </Button>
+                    </Link>
+                  </TableCell>
                 </TableRow>
               );
             })}
