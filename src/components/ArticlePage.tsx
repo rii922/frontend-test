@@ -7,7 +7,6 @@ import { useParams, Link } from 'react-router-dom';
 import Header from './Header';
 import ErrorMessage from './ErrorMessage';
 import { APIKeyState } from '../states/APIKeyState';
-import { dataSelector } from '../states/ResponseState';
 
 const ArticlePage: React.FC = () => {
   const params = useParams();
@@ -49,11 +48,22 @@ const ArticlePage: React.FC = () => {
       </Box>
       {APIKey === '' && <ErrorMessage content="APIキーを入力してください" />}
       {invalidAPIKey && <ErrorMessage content="APIキーが正しくありません" />}
-      <Paper
-        elevation={6}
-        dangerouslySetInnerHTML={{ __html: article ?? '' }}
-        sx={{ flex: 1, overflow: 'auto', p: 3, mx: 3, mb: 3 }}
-      />
+      <Paper elevation={6} sx={{ position: 'relative', flex: 1, overflow: 'auto', mx: 3, mb: 3 }}>
+        <Box
+          dangerouslySetInnerHTML={{ __html: article ?? '' }}
+          sx={{ zIndex: 0, position: 'absolute', top: 0, left: 0, p: 3 }}
+        />
+        {loading && (
+          <Box sx={{ zIndex: 1, position: 'sticky', top: 0, left: 0, width: '100%', height: '100%' }}>
+            <Box
+              component="span"
+              sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+            >
+              <CircularProgress />
+            </Box>
+          </Box>
+        )}
+      </Paper>
     </div>
   );
 };
