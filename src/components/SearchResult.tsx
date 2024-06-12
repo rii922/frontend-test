@@ -45,17 +45,12 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
   const loading = Recoil.useRecoilValue(loadingState);
 
   return (
-    <Box
-      sx={[
-        { display: 'flex', flexDirection: 'column', overflow: 'auto' },
-        ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-      ]}
-    >
+    <Box sx={[{ display: 'flex', flexDirection: 'column' }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}>
       <TableContainer
         id="search_result_table_container"
         component={Paper}
         elevation={4}
-        sx={{ position: 'relative', width: 'auto', mb: 3, flex: 1 }}
+        sx={{ position: 'relative', flex: 1, overflow: 'auto', mb: 3 }}
       >
         <Table stickyHeader sx={{ zIndex: 0, position: 'absolute', top: 0, left: 0 }}>
           <TableHead sx={{ '& tr th': { fontWeight: 'bold' } }}>

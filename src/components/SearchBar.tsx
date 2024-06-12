@@ -78,7 +78,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
         component="form"
         elevation={4}
         sx={[
-          { display: 'flex', alignItems: 'center', pl: 2, pr: 1 },
+          { display: 'flex', alignItems: 'center', pl: 2, pr: 1, mb: 3, '& .MuiInputBase-root': { py: 0 } },
           ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
         ]}
         onSubmit={handleSubmit}
@@ -89,7 +89,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
           defaultValue={query}
           inputRef={searchInputElement}
           placeholder="Search..."
-          sx={{ flex: 1, py: 1 }}
+          sx={{ flex: 1, '& .MuiInputBase-input': { py: 1.5 } }}
           onKeyDown={handleKeyDown}
         />
         <Tooltip title="検索">
@@ -97,7 +97,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
             <SearchOutlined />
           </IconButton>
         </Tooltip>
-        <Divider orientation="vertical" flexItem sx={{ m: 1 }} />
+        <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
         <Tooltip title="APIキーを設定">
           <IconButton id="apikey-button" aria-label="search" color="primary" sx={{ p: 1 }} onClick={handleDialogOpen}>
             <KeyOutlined />
@@ -105,8 +105,8 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
         </Tooltip>
       </Paper>
       <APIKeyDialog open={dialogOpen} handleClose={handleDialogClose} />
-      {APIKey === '' && <ErrorMessage content="APIキーを入力してください" />}
-      {invalidAPIKey && <ErrorMessage content="APIキーが正しくありません" />}
+      {APIKey === '' && <ErrorMessage content="APIキーを入力してください" sx={{ mb: 3 }} />}
+      {invalidAPIKey && <ErrorMessage content="APIキーが正しくありません" sx={{ mb: 3 }} />}
     </>
   );
 };

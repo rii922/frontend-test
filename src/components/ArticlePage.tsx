@@ -47,9 +47,9 @@ const ArticlePage: React.FC = () => {
           </Button>
         </Link>
       </Box>
-      {APIKey === '' && <ErrorMessage content="APIキーを入力してください" />}
-      {invalidAPIKey && <ErrorMessage content="APIキーが正しくありません" />}
-      <Paper elevation={6} sx={{ position: 'relative', flex: 1, overflow: 'auto', mx: 3, mb: 3 }}>
+      {APIKey === '' && <ErrorMessage content="APIキーを入力してください" sx={{ mb: 3 }} />}
+      {invalidAPIKey && <ErrorMessage content="APIキーが正しくありません" sx={{ mb: 3 }} />}
+      <Paper elevation={4} sx={{ position: 'relative', flex: 1, overflow: 'auto', mx: 3, mb: 3 }}>
         <Box sx={{ zIndex: 0, position: 'absolute', top: 0, left: 0, p: 3 }}>
           <MathJax dynamic dangerouslySetInnerHTML={{ __html: article ?? '' }} />
         </Box>

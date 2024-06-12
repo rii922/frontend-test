@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { Box, Paper } from '@mui/material';
+import { SxProps, Theme, Box, Paper } from '@mui/material';
 import { ErrorOutline } from '@mui/icons-material';
 
 interface ErrorMessageProps {
   content: string;
+  sx?: SxProps<Theme>;
 }
 
 const ErrorMessage: React.FC<ErrorMessageProps> = (props) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+    <Box sx={[{ display: 'flex', justifyContent: 'center' }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}>
       <Paper
         elevation={0}
         sx={{
