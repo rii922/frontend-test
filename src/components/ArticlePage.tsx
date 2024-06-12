@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Recoil from 'recoil';
 import axios, { AxiosError } from 'axios';
+import { MathJax } from 'better-react-mathjax';
 import { Box, Button, Paper, CircularProgress } from '@mui/material';
 import { KeyboardArrowLeft } from '@mui/icons-material';
 import { useParams, Link } from 'react-router-dom';
@@ -49,10 +50,9 @@ const ArticlePage: React.FC = () => {
       {APIKey === '' && <ErrorMessage content="APIキーを入力してください" />}
       {invalidAPIKey && <ErrorMessage content="APIキーが正しくありません" />}
       <Paper elevation={6} sx={{ position: 'relative', flex: 1, overflow: 'auto', mx: 3, mb: 3 }}>
-        <Box
-          dangerouslySetInnerHTML={{ __html: article ?? '' }}
-          sx={{ zIndex: 0, position: 'absolute', top: 0, left: 0, p: 3 }}
-        />
+        <Box sx={{ zIndex: 0, position: 'absolute', top: 0, left: 0, p: 3 }}>
+          <MathJax dynamic dangerouslySetInnerHTML={{ __html: article ?? '' }} />
+        </Box>
         {loading && (
           <Box sx={{ zIndex: 1, position: 'sticky', top: 0, left: 0, width: '100%', height: '100%' }}>
             <Box
