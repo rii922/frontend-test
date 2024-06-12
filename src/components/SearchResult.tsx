@@ -55,9 +55,9 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         id="search_result_table_container"
         component={Paper}
         elevation={4}
-        sx={{ width: 'auto', mb: 3, flex: 1 }}
+        sx={{ position: 'relative', width: 'auto', mb: 3, flex: 1 }}
       >
-        <Table stickyHeader>
+        <Table stickyHeader sx={{ zIndex: 0, position: 'absolute', top: 0, left: 0 }}>
           <TableHead sx={{ '& tr th': { fontWeight: 'bold' } }}>
             <TableRow>
               <TableCell sx={{ minWidth: 400 }}>タイトル</TableCell>
@@ -99,9 +99,14 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
           </TableBody>
         </Table>
         {loading && (
-          <CircularProgress
-            sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
-          />
+          <Box sx={{ zIndex: 1, position: 'sticky', top: 0, left: 0, width: '100%', height: '100%' }}>
+            <Box
+              component="span"
+              sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+            >
+              <CircularProgress />
+            </Box>
+          </Box>
         )}
       </TableContainer>
       <Pagination
