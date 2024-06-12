@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Recoil from 'recoil';
 import axios, { AxiosError } from 'axios';
 import { MathJax } from 'better-react-mathjax';
+import parse, { DOMNode, Element, domToReact } from 'html-react-parser';
 import { Box, Button, Paper, CircularProgress } from '@mui/material';
 import { KeyboardArrowLeft } from '@mui/icons-material';
 import { useParams, Link } from 'react-router-dom';
@@ -9,12 +10,14 @@ import Header from './Header';
 import ErrorMessage from './ErrorMessage';
 import { APIKeyState } from '../states/APIKeyState';
 
+declare var PR: any;
+
 const ArticlePage: React.FC = () => {
   const params = useParams();
   const [loading, setLoading] = React.useState(false);
   const [invalidAPIKey, setInvalidAPIKey] = React.useState(false);
   const APIKey = Recoil.useRecoilValue(APIKeyState);
-  const [article, setArticle] = React.useState<string | null>(null);
+  const [article, setArticle] = React.useState<string | React.JSX.Element | React.JSX.Element[] | null>(null);
   React.useEffect(() => {
     if (APIKey === '') {
       return;
@@ -25,7 +28,15 @@ const ArticlePage: React.FC = () => {
         headers: { Authorization: `Bearer ${APIKey}` },
       })
       .then((response) => {
-        setArticle(response?.data?.rendered_body);
+        const parsed = parse(response?.data?.rendered_body ?? '', {
+          replace: (node) => {
+            console.log('abo');
+            if ((node as Element).name === 'pre') {
+              return <pre className="prettyprint">{domToReact((node as Element).children as DOMNode[])}</pre>;
+            }
+          },
+        });
+        setArticle(parsed);
       })
       .catch((error: AxiosError) => {
         if (error.response?.status === 401) {
@@ -36,6 +47,9 @@ const ArticlePage: React.FC = () => {
         setLoading(false);
       });
   }, []);
+  React.useEffect(() => {
+    PR.prettyPrint();
+  }, [article]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100vw', height: '100vh' }}>
@@ -50,8 +64,8 @@ const ArticlePage: React.FC = () => {
       {APIKey === '' && <ErrorMessage content="APIキーを入力してください" sx={{ mb: 3 }} />}
       {invalidAPIKey && <ErrorMessage content="APIキーが正しくありません" sx={{ mb: 3 }} />}
       <Paper elevation={4} sx={{ position: 'relative', flex: 1, overflow: 'auto', mx: 3, mb: 3 }}>
-        <Box sx={{ zIndex: 0, position: 'absolute', top: 0, left: 0, p: 3 }}>
-          <MathJax dynamic dangerouslySetInnerHTML={{ __html: article ?? '' }} />
+        <Box sx={{ zIndex: 0, position: 'absolute', top: 0, left: 0, width: '100%', p: 3 }}>
+          <MathJax dynamic>{article}</MathJax>
         </Box>
         {loading && (
           <Box sx={{ zIndex: 1, position: 'sticky', top: 0, left: 0, width: '100%', height: '100%' }}>
