@@ -32,6 +32,12 @@ const ArticlePage: React.FC = () => {
           replace: (node) => {
             if ((node as Element).name === 'pre') {
               return <pre className="prettyprint">{domToReact((node as Element).children as DOMNode[])}</pre>;
+            } else if ((node as Element).name === 'a') {
+              return (
+                <a target="_blank" {...(node as Element).attribs}>
+                  {domToReact((node as Element).children as DOMNode[])}
+                </a>
+              );
             }
           },
         });
