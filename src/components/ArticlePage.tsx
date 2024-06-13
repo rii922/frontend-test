@@ -33,8 +33,13 @@ const ArticlePage: React.FC = () => {
             if ((node as Element).name === 'pre') {
               return <pre className="prettyprint">{domToReact((node as Element).children as DOMNode[])}</pre>;
             } else if ((node as Element).name === 'a') {
+              let attribs = (node as Element).attribs;
+              if ('class' in attribs) {
+                attribs.className = attribs.class;
+                delete attribs.class;
+              }
               return (
-                <a target="_blank" {...(node as Element).attribs}>
+                <a target="_blank" {...attribs}>
                   {domToReact((node as Element).children as DOMNode[])}
                 </a>
               );
