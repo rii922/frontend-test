@@ -30,7 +30,6 @@ const ArticlePage: React.FC = () => {
       .then((response) => {
         const parsed = parse(response?.data?.rendered_body ?? '', {
           replace: (node) => {
-            console.log('abo');
             if ((node as Element).name === 'pre') {
               return <pre className="prettyprint">{domToReact((node as Element).children as DOMNode[])}</pre>;
             }
@@ -65,7 +64,9 @@ const ArticlePage: React.FC = () => {
       {invalidAPIKey && <ErrorMessage content="APIキーが正しくありません" sx={{ mb: 3 }} />}
       <Paper elevation={4} sx={{ position: 'relative', flex: 1, overflow: 'auto', mx: 3, mb: 3 }}>
         <Box sx={{ zIndex: 0, position: 'absolute', top: 0, left: 0, width: '100%', p: 3 }}>
-          <MathJax dynamic>{article}</MathJax>
+          <MathJax dynamic id="article">
+            {article}
+          </MathJax>
         </Box>
         {loading && (
           <Box sx={{ zIndex: 1, position: 'sticky', top: 0, left: 0, width: '100%', height: '100%' }}>
