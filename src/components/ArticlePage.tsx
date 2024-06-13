@@ -38,6 +38,13 @@ const ArticlePage: React.FC = () => {
                   {domToReact((node as Element).children as DOMNode[])}
                 </a>
               );
+            } else if ((node as Element).name === 'iframe') {
+              const href = decodeURIComponent((node as Element).attribs['data-content']);
+              return (
+                <a href={href} target="_blank">
+                  {href}
+                </a>
+              );
             }
           },
         });
