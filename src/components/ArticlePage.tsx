@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Recoil from 'recoil';
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
+import { setupCache, CacheAxiosResponse } from 'axios-cache-interceptor';
 import { MathJax } from 'better-react-mathjax';
 import parse, { DOMNode, Element, domToReact } from 'html-react-parser';
 import { Box, Button, Paper, Chip, CircularProgress } from '@mui/material';
@@ -20,16 +21,21 @@ const ArticlePage: React.FC = () => {
   const [invalidAPIKey, setInvalidAPIKey] = React.useState(false);
   const APIKey = Recoil.useRecoilValue(APIKeyState);
   const [article, setArticle] = React.useState<string | React.JSX.Element | React.JSX.Element[] | null>(null);
+  const api = setupCache(axios.create());
   React.useEffect(() => {
     if (APIKey === '') {
       return;
     }
     setLoading(true);
-    axios
+    api
       .get(`https://qiita.com/api/v2/items/${params.id}`, {
+        cache: {
+          ttl: 1000 * 60 * 15,
+          interpretHeader: false,
+        },
         headers: { Authorization: `Bearer ${APIKey}` },
       })
-      .then((response: AxiosResponse<QiitaResponseArticle>) => {
+      .then((response: CacheAxiosResponse<QiitaResponseArticle>) => {
         if (!response?.data) {
           setArticle(null);
           return;
@@ -63,7 +69,7 @@ const ArticlePage: React.FC = () => {
           <>
             <h1 id="title">{response.data.title}</h1>
             <div id="tags">
-              {response.data.tags.map((tag) => {
+              {response.data.tags.map((tag: { name: string }) => {
                 return <Chip key={tag.name} label={tag.name} sx={{ m: 0.5 }} />;
               })}
             </div>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Recoil from 'recoil';
 import axios, { AxiosError } from 'axios';
+import { setupCache, CacheAxiosResponse } from 'axios-cache-interceptor';
 import { SxProps, Theme, Paper, InputBase, Tooltip, IconButton, Divider } from '@mui/material';
 import { SearchOutlined, KeyOutlined } from '@mui/icons-material';
 import APIKeyDialog from './APIKeyDialog';
@@ -11,6 +12,7 @@ import { pageState } from '../states/PageState';
 import { perPageState } from '../states/PerPageState';
 import { responseState } from '../states/ResponseState';
 import { loadingState } from '../states/LoadingState';
+import { QiitaResponseArticle } from '../states/ResponseState';
 import { scrollSearchResultToTop } from './SearchResult';
 
 interface SearchBarProps {
@@ -27,6 +29,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   const [invalidAPIKey, setInvalidAPIKey] = React.useState(false);
   const [, setResponse] = Recoil.useRecoilState(responseState);
   const [, setLoading] = Recoil.useRecoilState(loadingState);
+  const api = setupCache(axios.create(), {});
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
       event.currentTarget.blur();
@@ -42,12 +45,16 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
       return;
     }
     setLoading(true);
-    axios
+    api
       .get('https://qiita.com/api/v2/items', {
+        cache: {
+          ttl: 1000 * 60 * 15,
+          interpretHeader: false,
+        },
         headers: { Authorization: `Bearer ${APIKey}` },
         params: { query: query, page: page, per_page: perPage },
       })
-      .then((response) => {
+      .then((response: CacheAxiosResponse<QiitaResponseArticle[]>) => {
         setInvalidAPIKey(false);
         setResponse(response);
       })
