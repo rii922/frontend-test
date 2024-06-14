@@ -26,7 +26,7 @@ interface SearchResultProps {
   sx?: SxProps<Theme>;
 }
 
-const formatDate = (date: string) => {
+export const formatDate = (date: string) => {
   const match = date.match(/^(\d+)-(\d+)-(\d+)T(\d+):(\d+):(\d+)\+(\d+):(\d+)$/);
   return match === null ? date : `${match[1]}年${match[2]}月${match[3]}日`;
 };

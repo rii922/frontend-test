@@ -51,6 +51,20 @@ table {
   & > *:not(:last-child) {
     margin-bottom: 16px;
   }
+  & h1#title {
+    font-size: 200%;
+    border: none;
+  }
+  & #date {
+    margin-bottom: 40px;
+  }
+  & #date p {
+    display: inline-block;
+    color: #666666;
+  }
+  & #date p#updated_at {
+    margin-right: 8px;
+  }
   & pre {
     display: block;
     width: auto;

@@ -1,7 +1,7 @@
 import * as Recoil from 'recoil';
-import { AxiosResponse, AxiosResponseHeaders } from 'axios';
+import { AxiosResponse } from 'axios';
 
-interface QiitaResponseArticle {
+export interface QiitaResponseArticle {
   rendered_body: string;
   body: string;
   coediting: boolean;

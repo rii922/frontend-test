@@ -1,14 +1,16 @@
 import * as React from 'react';
 import * as Recoil from 'recoil';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import { MathJax } from 'better-react-mathjax';
 import parse, { DOMNode, Element, domToReact } from 'html-react-parser';
-import { Box, Button, Paper, CircularProgress } from '@mui/material';
+import { Box, Button, Paper, Chip, CircularProgress } from '@mui/material';
 import { KeyboardArrowLeft } from '@mui/icons-material';
 import { useParams, Link } from 'react-router-dom';
 import Header from './Header';
 import ErrorMessage from './ErrorMessage';
 import { APIKeyState } from '../states/APIKeyState';
+import { QiitaResponseArticle } from '../states/ResponseState';
+import { formatDate } from './SearchResult';
 
 declare var PR: any;
 
@@ -27,8 +29,12 @@ const ArticlePage: React.FC = () => {
       .get(`https://qiita.com/api/v2/items/${params.id}`, {
         headers: { Authorization: `Bearer ${APIKey}` },
       })
-      .then((response) => {
-        const parsed = parse(response?.data?.rendered_body ?? '', {
+      .then((response: AxiosResponse<QiitaResponseArticle>) => {
+        if (!response?.data) {
+          setArticle(null);
+          return;
+        }
+        const parsed = parse(response.data.rendered_body, {
           replace: (node) => {
             if ((node as Element).name === 'pre') {
               return <pre className="prettyprint">{domToReact((node as Element).children as DOMNode[])}</pre>;
@@ -53,7 +59,25 @@ const ArticlePage: React.FC = () => {
             }
           },
         });
-        setArticle(parsed);
+        setArticle(
+          <>
+            <h1 id="title">{response.data.title}</h1>
+            <div id="tags">
+              {response.data.tags.map((tag) => {
+                return <Chip key={tag.name} label={tag.name} sx={{ m: 0.5 }} />;
+              })}
+            </div>
+            <div id="date">
+              <p id="updated_at">
+                最終更新日 <time>{formatDate(response.data.updated_at)}</time>
+              </p>
+              <p id="created_at">
+                投稿日 <time>{formatDate(response.data.created_at)}</time>
+              </p>
+            </div>
+            {parsed}
+          </>,
+        );
       })
       .catch((error: AxiosError) => {
         if (error.response?.status === 401) {
