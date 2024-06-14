@@ -8,6 +8,7 @@ import ErrorMessage from './ErrorMessage';
 import { APIKeyState } from '../states/APIKeyState';
 import { queryState } from '../states/QueryState';
 import { pageState } from '../states/PageState';
+import { perPageState } from '../states/PerPageState';
 import { responseState } from '../states/ResponseState';
 import { loadingState } from '../states/LoadingState';
 import { scrollSearchResultToTop } from './SearchResult';
@@ -19,6 +20,7 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = (props) => {
   const [query, setQuery] = Recoil.useRecoilState(queryState);
   const page = Recoil.useRecoilValue(pageState);
+  const perPage = Recoil.useRecoilValue(perPageState);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const searchInputElement = React.useRef<HTMLInputElement>(null);
   const APIKey = Recoil.useRecoilValue(APIKeyState);
@@ -43,7 +45,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
     axios
       .get('https://qiita.com/api/v2/items', {
         headers: { Authorization: `Bearer ${APIKey}` },
-        params: { query: query, page: page },
+        params: { query: query, page: page, per_page: perPage },
       })
       .then((response) => {
         setInvalidAPIKey(false);
@@ -70,7 +72,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
-  React.useEffect(search, [APIKey, query, page]);
+  React.useEffect(search, [APIKey, query, page, perPage]);
 
   return (
     <>
