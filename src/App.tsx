@@ -19,7 +19,7 @@ function App() {
 
   return (
     <Recoil.RecoilRoot>
-      <BrowserRouter basename="/frontend-test">
+      <BrowserRouter>
         <MathJaxContext config={config}>
           <CssBaseline />
           <Routes>
