@@ -40,7 +40,7 @@ export const scrollSearchResultToTop = () => {
 };
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
-  const [, setPage] = Recoil.useRecoilState(pageState);
+  const [page, setPage] = Recoil.useRecoilState(pageState);
   const data = Recoil.useRecoilValue(dataSelector);
   const loading = Recoil.useRecoilValue(loadingState);
 
@@ -109,6 +109,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         boundaryCount={0}
         siblingCount={3}
         count={data === null ? 0 : 100}
+        page={page}
         sx={{ '& .MuiPagination-ul': { justifyContent: 'center' } }}
         onChange={(_, newPage) => {
           setPage(newPage);

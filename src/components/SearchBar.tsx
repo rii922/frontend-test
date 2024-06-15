@@ -21,8 +21,9 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = (props) => {
   const [query, setQuery] = Recoil.useRecoilState(queryState);
-  const page = Recoil.useRecoilValue(pageState);
+  const [page, setPage] = Recoil.useRecoilState(pageState);
   const perPage = Recoil.useRecoilValue(perPageState);
+  const queryChanged = React.useRef(false);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const searchInputElement = React.useRef<HTMLInputElement>(null);
   const APIKey = Recoil.useRecoilValue(APIKeyState);
@@ -41,7 +42,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
     setQuery(newQuery);
   };
   const search = () => {
-    if (APIKey === '' || invalidAPIKey || query === '') {
+    if (APIKey === '' || invalidAPIKey || query === '' || queryChanged.current) {
       return;
     }
     setLoading(true);
@@ -79,7 +80,13 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
-  React.useEffect(search, [APIKey, query, page, perPage]);
+  React.useEffect(search, [APIKey, page, perPage]);
+  React.useEffect(() => {
+    queryChanged.current = true;
+    setPage(1);
+    search();
+    queryChanged.current = false;
+  }, [query]);
 
   return (
     <>
