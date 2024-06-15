@@ -58,9 +58,12 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
     const newQuery = searchInputElement.current!.value;
     setQuery(newQuery);
   };
-  const search = () => {
-    if (APIKey === '' || invalidAPIKey || query === '' || queryChanged.current) {
+  const search = (firstpage: boolean | undefined = false) => {
+    if (APIKey === '' || invalidAPIKey || query === '') {
       return;
+    }
+    if (firstpage) {
+      setPage(1);
     }
     setLoading(true);
     api
@@ -70,7 +73,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
           interpretHeader: false,
         },
         headers: { Authorization: `Bearer ${APIKey}` },
-        params: { query: query, page: page, per_page: perPage },
+        params: { query: query, page: firstpage ? 1 : page, per_page: perPage },
       })
       .then((response: CacheAxiosResponse<QiitaResponseArticle[]>) => {
         setInvalidAPIKey(false);
@@ -84,6 +87,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
       })
       .finally(() => {
         setLoading(false);
+        queryChanged.current = false;
         scrollSearchResultToTop();
       });
   };
@@ -97,12 +101,16 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
-  useRerender(search, [APIKey, page, perPage]);
+  useRerender(() => {
+    if (queryChanged.current) {
+      queryChanged.current = false;
+      return;
+    }
+    search();
+  }, [APIKey, page, perPage]);
   useRerender(() => {
     queryChanged.current = true;
-    setPage(1);
-    search();
-    queryChanged.current = false;
+    search(true);
   }, [query]);
 
   return (
