@@ -15,6 +15,23 @@ import { loadingState } from '../states/LoadingState';
 import { QiitaResponseArticle } from '../states/ResponseState';
 import { scrollSearchResultToTop } from './SearchResult';
 
+const useIsMount = () => {
+  const isMount = React.useRef(true);
+  React.useEffect(() => {
+    isMount.current = false;
+  }, []);
+  return isMount.current;
+};
+
+const useRerender = (effect: React.EffectCallback, deps?: React.DependencyList | undefined) => {
+  const isMount = useIsMount();
+  React.useEffect(() => {
+    if (!isMount) {
+      effect();
+    }
+  }, deps);
+};
+
 interface SearchBarProps {
   sx?: SxProps<Theme>;
 }
@@ -80,8 +97,8 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
-  React.useEffect(search, [APIKey, page, perPage]);
-  React.useEffect(() => {
+  useRerender(search, [APIKey, page, perPage]);
+  useRerender(() => {
     queryChanged.current = true;
     setPage(1);
     search();
