@@ -60,6 +60,7 @@ const SearchBar: React.FC<SearchBarProps> = (props) => {
   };
   const search = (firstpage: boolean | undefined = false) => {
     if (APIKey === '' || invalidAPIKey || query === '') {
+      queryChanged.current = false;
       return;
     }
     if (firstpage) {
